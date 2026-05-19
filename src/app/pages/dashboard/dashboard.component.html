@@ -29,14 +29,19 @@
             />
           </div>
           <div class="form-group form-group-code">
-            <label for="shortCode">Custom Short Code <span class="optional">(optional)</span></label>
+            <label for="shortCode">
+              Custom Short Code <span class="optional">(optional)</span>
+              <span class="info-icon">&#x24D8;
+                <span class="tooltip">4–16 characters. Leave blank for an auto-generated 6-character code.</span>
+              </span>
+            </label>
             <input
               id="shortCode"
               type="text"
               [(ngModel)]="shortCode"
               name="shortCode"
               placeholder="e.g. my-link"
-              maxlength="6"
+              maxlength="16"
               [disabled]="formLoading()"
             />
           </div>

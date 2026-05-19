@@ -88,6 +88,40 @@
 .form-group-code { min-width: 160px; }
 .form-group-expires { min-width: 200px; }
 
+.info-icon {
+  position: relative;
+  font-size: .8rem;
+  color: var(--gray-400);
+  margin-left: .3rem;
+  cursor: default;
+  vertical-align: middle;
+
+  &:hover {
+    color: var(--primary);
+
+    .tooltip { display: block; }
+  }
+
+  .tooltip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    background: var(--gray-800);
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 1.4;
+    padding: .4rem .6rem;
+    border-radius: 6px;
+    pointer-events: none;
+    white-space: normal;
+    z-index: 10;
+  }
+}
+
 .form-actions { margin-top: .5rem; }
 
 .btn-primary {
