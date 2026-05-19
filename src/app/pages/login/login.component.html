@@ -1,0 +1,57 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="brand">
+      <span class="brand-icon">&#x26A1;</span>
+      <h1>Shortly</h1>
+      <p class="brand-tagline">Shorten smarter.</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          [(ngModel)]="username"
+          name="username"
+          placeholder="Enter your username"
+          autocomplete="username"
+          [disabled]="loading()"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          [disabled]="loading()"
+        />
+      </div>
+
+      @if (error()) {
+        <div class="alert alert-error">
+          <span class="alert-icon">&#x26A0;</span>
+          {{ error() }}
+        </div>
+      }
+
+      <button type="submit" class="btn btn-primary" [disabled]="loading()">
+        @if (loading()) {
+          <span class="spinner"></span> Signing in…
+        } @else {
+          Sign In
+        }
+      </button>
+    </form>
+
+    <p class="auth-link">
+      Don't have an account?
+      <a routerLink="/register">Create one</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,195 @@
+<div class="dashboard">
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="navbar-brand">
+      <span class="brand-icon">&#x26A1;</span>
+      <span class="brand-name">Shortly</span>
+    </div>
+    <div class="navbar-right">
+      <span class="navbar-user">{{ auth.currentUsername() }}</span>
+      <button class="btn btn-outline btn-sm" (click)="logout()">Sign Out</button>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Add URL Form -->
+    <section class="card form-card">
+      <h2 class="card-title">Shorten a URL</h2>
+      <form (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-row">
+          <div class="form-group form-group-url">
+            <label for="originalUrl">Destination URL <span class="required">*</span></label>
+            <input
+              id="originalUrl"
+              type="url"
+              [(ngModel)]="originalUrl"
+              name="originalUrl"
+              placeholder="https://example.com/your-long-url"
+              [disabled]="formLoading()"
+            />
+          </div>
+          <div class="form-group form-group-code">
+            <label for="shortCode">Custom Short Code <span class="optional">(optional)</span></label>
+            <input
+              id="shortCode"
+              type="text"
+              [(ngModel)]="shortCode"
+              name="shortCode"
+              placeholder="e.g. my-link"
+              maxlength="6"
+              [disabled]="formLoading()"
+            />
+          </div>
+          <div class="form-group form-group-expires">
+            <label for="expiresAt">Expires At <span class="optional">(optional)</span></label>
+            <input
+              id="expiresAt"
+              type="datetime-local"
+              [(ngModel)]="expiresAt"
+              name="expiresAt"
+              [disabled]="formLoading()"
+            />
+          </div>
+        </div>
+
+        @if (formError()) {
+          <div class="alert alert-error">
+            <span class="alert-icon">&#x26A0;</span>
+            {{ formError() }}
+          </div>
+        }
+        @if (formSuccess()) {
+          <div class="alert alert-success">
+            <span class="alert-icon">&#x2713;</span>
+            {{ formSuccess() }}
+          </div>
+        }
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="formLoading()">
+            @if (formLoading()) {
+              <span class="spinner"></span> Shortening…
+            } @else {
+              &#x26A1; Shorten URL
+            }
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- URL List -->
+    <section class="card list-card">
+      <div class="list-header">
+        <h2 class="card-title">Your URLs</h2>
+        <div class="sort-controls">
+          <span class="sort-label">Sort by:</span>
+          @for (field of sortFields; track field.value) {
+            <button
+              class="sort-btn"
+              [class.active]="sortBy === field.value"
+              (click)="onSortChange(field.value)"
+            >
+              {{ field.label }}
+              @if (sortBy === field.value) {
+                <span class="sort-arrow">{{ direction === 'ASC' ? '&#x2191;' : '&#x2193;' }}</span>
+              }
+            </button>
+          }
+        </div>
+      </div>
+
+      @if (deleteError()) {
+        <div class="alert alert-error">
+          <span class="alert-icon">&#x26A0;</span>
+          {{ deleteError() }}
+        </div>
+      }
+
+      @if (loading()) {
+        <div class="loading-state">
+          <span class="spinner spinner-lg"></span>
+          <p>Loading your URLs…</p>
+        </div>
+      } @else if (urls().length === 0) {
+        <div class="empty-state">
+          <span class="empty-icon">&#x1F517;</span>
+          <p>No URLs yet. Shorten your first one above!</p>
+        </div>
+      } @else {
+        <div class="table-wrapper">
+          <table class="url-table">
+            <thead>
+              <tr>
+                <th class="col-code" (click)="onSortChange('shortCode')">
+                  Short Code
+                  @if (sortBy === 'shortCode') {
+                    <span class="sort-arrow">{{ direction === 'ASC' ? '&#x2191;' : '&#x2193;' }}</span>
+                  }
+                </th>
+                <th class="col-url" (click)="onSortChange('originalUrl')">
+                  Original URL
+                  @if (sortBy === 'originalUrl') {
+                    <span class="sort-arrow">{{ direction === 'ASC' ? '&#x2191;' : '&#x2193;' }}</span>
+                  }
+                </th>
+                <th class="col-date" (click)="onSortChange('createdAt')">
+                  Created
+                  @if (sortBy === 'createdAt') {
+                    <span class="sort-arrow">{{ direction === 'ASC' ? '&#x2191;' : '&#x2193;' }}</span>
+                  }
+                </th>
+                <th class="col-date" (click)="onSortChange('expiresAt')">
+                  Expires
+                  @if (sortBy === 'expiresAt') {
+                    <span class="sort-arrow">{{ direction === 'ASC' ? '&#x2191;' : '&#x2193;' }}</span>
+                  }
+                </th>
+                <th class="col-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (url of urls(); track url.shortCode) {
+                <tr [class.expired]="isExpired(url.expiresAt)">
+                  <td class="col-code">
+                    <code class="short-code">{{ url.shortCode }}</code>
+                    @if (isExpired(url.expiresAt)) {
+                      <span class="badge badge-expired">Expired</span>
+                    }
+                  </td>
+                  <td class="col-url">
+                    <a [href]="url.originalUrl" target="_blank" rel="noopener" class="url-link" [title]="url.originalUrl">
+                      {{ url.originalUrl }}
+                    </a>
+                  </td>
+                  <td class="col-date">{{ formatDate(url.createdAt) }}</td>
+                  <td class="col-date">{{ formatDate(url.expiresAt) }}</td>
+                  <td class="col-actions">
+                    <button
+                      class="action-btn copy-btn"
+                      [class.copied]="copiedCode() === url.shortCode"
+                      (click)="copyToClipboard(url.shortCode)"
+                      [title]="copiedCode() === url.shortCode ? 'Copied!' : 'Copy short code'"
+                    >
+                      @if (copiedCode() === url.shortCode) {
+                        &#x2713; Copied
+                      } @else {
+                        &#x29C5; Copy
+                      }
+                    </button>
+                    <button
+                      class="action-btn delete-btn"
+                      (click)="deleteUrl(url.shortCode)"
+                      title="Delete this URL"
+                    >
+                      &#x1F5D1; Delete
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  </main>
+</div>

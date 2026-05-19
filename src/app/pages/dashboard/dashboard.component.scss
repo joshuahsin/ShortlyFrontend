@@ -1,0 +1,294 @@
+/* ── Dashboard layout ── */
+.dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--gray-50);
+}
+
+/* ── Navbar ── */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 60px;
+  background: #fff;
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+
+    .brand-icon { font-size: 1.25rem; }
+    .brand-name { font-size: 1.25rem; font-weight: 800; color: var(--primary); letter-spacing: -0.02em; }
+  }
+
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .navbar-user {
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--gray-600);
+
+      &::before { content: 'Hi, '; color: var(--gray-400); font-weight: 400; }
+    }
+  }
+}
+
+/* ── Main ── */
+.main-content {
+  flex: 1;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── Cards ── */
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+  padding: 1.75rem;
+  box-shadow: var(--shadow);
+}
+
+.card-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 1.25rem;
+}
+
+/* ── Add URL form ── */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1rem;
+  align-items: end;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group-url { flex: 1; }
+.form-group-code { min-width: 160px; }
+.form-group-expires { min-width: 200px; }
+
+.form-actions { margin-top: .5rem; }
+
+.btn-primary {
+  width: auto !important;
+  padding: .65rem 1.5rem !important;
+}
+
+/* ── List header ── */
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-bottom: 1.25rem;
+
+  .card-title { margin-bottom: 0; }
+}
+
+/* ── Sort controls ── */
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: .375rem;
+  flex-wrap: wrap;
+
+  .sort-label {
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-right: .25rem;
+  }
+}
+
+.sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .3rem .7rem;
+  border-radius: 20px;
+  border: 1.5px solid var(--gray-200);
+  background: #fff;
+  font-size: .8125rem;
+  font-weight: 500;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all .15s;
+
+  &:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+
+  &.active {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .sort-arrow { font-size: .75rem; }
+}
+
+/* ── Table ── */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-200);
+}
+
+.url-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .875rem;
+
+  thead tr {
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  th {
+    padding: .75rem 1rem;
+    text-align: left;
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    white-space: nowrap;
+    user-select: none;
+    cursor: pointer;
+
+    &:hover { color: var(--primary); }
+    .sort-arrow { font-size: .7rem; margin-left: 2px; }
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--gray-100);
+    transition: background .1s;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: var(--gray-50); }
+    &.expired { opacity: .6; }
+  }
+
+  td {
+    padding: .875rem 1rem;
+    color: var(--gray-700);
+    vertical-align: middle;
+  }
+
+  .col-code { width: 160px; }
+  .col-url { max-width: 0; }
+  .col-date { width: 120px; white-space: nowrap; color: var(--gray-500); font-size: .8125rem; }
+  .col-actions { width: 160px; white-space: nowrap; }
+}
+
+.short-code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: .8125rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: .2rem .5rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-block;
+  padding: .1rem .45rem;
+  border-radius: 20px;
+  font-size: .7rem;
+  font-weight: 700;
+  margin-left: .4rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+
+  &.badge-expired {
+    background: var(--danger-light);
+    color: var(--danger);
+  }
+}
+
+.url-link {
+  display: block;
+  color: var(--gray-700);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 400px;
+
+  &:hover { color: var(--primary); text-decoration: underline; }
+}
+
+/* ── Action buttons ── */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .3rem .65rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid;
+  font-size: .8rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all .15s;
+  margin-right: .375rem;
+
+  &:last-child { margin-right: 0; }
+}
+
+.copy-btn {
+  border-color: var(--gray-300);
+  color: var(--gray-600);
+  background: #fff;
+
+  &:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+
+  &.copied {
+    border-color: var(--success);
+    color: var(--success);
+    background: var(--success-light);
+  }
+}
+
+.delete-btn {
+  border-color: var(--gray-200);
+  color: var(--gray-500);
+  background: #fff;
+
+  &:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
+}
+
+/* ── States ── */
+.loading-state, .empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--gray-400);
+
+  p { margin-top: .75rem; font-size: .9375rem; }
+}
+
+.empty-icon { font-size: 2.5rem; display: block; }
