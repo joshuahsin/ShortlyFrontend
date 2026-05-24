@@ -126,7 +126,7 @@ export class DashboardComponent implements OnInit {
   }
 
   copyToClipboard(shortCode: string): void {
-    navigator.clipboard.writeText("http://localhost:8080/api/urls/" + shortCode).then(() => {
+    navigator.clipboard.writeText(`${window.location.origin}/api/urls/${shortCode}`).then(() => {
       this.copiedCode.set(shortCode);
       setTimeout(() => this.copiedCode.set(''), 2000);
     });
