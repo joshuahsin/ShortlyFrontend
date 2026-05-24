@@ -126,10 +126,22 @@ export class DashboardComponent implements OnInit {
   }
 
   copyToClipboard(shortCode: string): void {
-    navigator.clipboard.writeText(`${window.location.origin}/api/urls/${shortCode}`).then(() => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(`${window.location.origin}/api/urls/${shortCode}`).then(() => {
+        this.copiedCode.set(shortCode);
+        setTimeout(() => this.copiedCode.set(''), 2000);
+      });
+    }
+    else {
+      const el = document.createElement('textarea');
+      el.value = `${window.location.origin}/api/urls/${shortCode}`;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
       this.copiedCode.set(shortCode);
       setTimeout(() => this.copiedCode.set(''), 2000);
-    });
+    }
   }
 
   logout(): void {
