@@ -16,5 +16,6 @@ Built with Angular.js with the assistance of Claude Code. Communicates with Back
 
 ---
 
-## Live Link
-http://ec2-18-217-220-93.us-east-2.compute.amazonaws.com
+### Live Application Link
+
+Link: https://ju310nyyyf.execute-api.us-east-2.amazonaws.com/
